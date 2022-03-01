@@ -4,7 +4,7 @@ from geomdl import NURBS, BSpline
 import numpy as np
 import pyvista as pv
 
-from pyiges.entity import Entity
+from entity import Entity
 
 
 def parse_float(str_value):

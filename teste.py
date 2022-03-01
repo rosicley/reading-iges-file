@@ -1,3 +1,5 @@
-import pyiges
+import iges
 
-print("teste")
+file = iges.read('teste.igs')
+
+print('teste')

@@ -1,5 +1,5 @@
 import os
-from pyiges.constants import line_font_pattern
+from constants import line_font_pattern
 
 
 class Entity():

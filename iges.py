@@ -1,6 +1,6 @@
 from tqdm import tqdm
-from pyiges.entity import Entity
-from pyiges import geometry
+from entity import Entity
+import geometry
 
 try: 
     import pyvista 
