@@ -19,7 +19,6 @@ def parse_float(str_value):
         return float(str_value.lower().replace("d", "e"))
 
 
-
 class Point(Entity):
     """IGES Point"""
 
@@ -87,7 +86,8 @@ class Line(Entity):
     def __repr__(self):
         s = '--- IGES Line ---' + os.linesep
         s += Entity.__str__(self) + os.linesep
-        s += "From point {0}, {1}, {2} {3}".format(self._x1, self._y1, self._z1, os.linesep)
+        s += "From point {0}, {1}, {2} {3}".format(
+            self._x1, self._y1, self._z1, os.linesep)
         s += "To point {0}, {1}, {2}".format(self._x2, self._y2, self._z2)
         return s
 
@@ -185,7 +185,6 @@ class ConicArc(Entity):
     # A hyperbola if Q2 < 0 and Q1 != 0.
     # A parabola if Q2 = 0 and Q1 != 0.
 
-
     def _add_parameters(self, parameters):
         """
         Index	Type	Name	Description
@@ -202,18 +201,18 @@ class ConicArc(Entity):
         11	REAL	Y2	y coordinate of end point
         12	REAL	Z2	z coordinate of end point
         """
-        self.a = parameters[1]  #  coefficient of xt^2
-        self.b = parameters[2]  #  coefficient of xtyt
-        self.c = parameters[3]  #  coefficient of yt^2
-        self.d = parameters[4]  #  coefficient of xt
-        self.e = parameters[5]  #  coefficient of yt
-        self.f = parameters[6]  #  scalar coefficient
-        self.x1 = parameters[7]  #  x coordinate of start point
-        self.y1 = parameters[8]  #  y coordinate of start point
-        self.z1 = parameters[9]  #  z coordinate of start point
-        self.x2 = parameters[10]  #  x coordinate of end point
-        self.y2 = parameters[11]  #  y coordinate of end point
-        self.z2 = parameters[12]  #  z coordinate of end point
+        self.a = parameters[1]  # coefficient of xt^2
+        self.b = parameters[2]  # coefficient of xtyt
+        self.c = parameters[3]  # coefficient of yt^2
+        self.d = parameters[4]  # coefficient of xt
+        self.e = parameters[5]  # coefficient of yt
+        self.f = parameters[6]  # scalar coefficient
+        self.x1 = parameters[7]  # x coordinate of start point
+        self.y1 = parameters[8]  # y coordinate of start point
+        self.z1 = parameters[9]  # z coordinate of start point
+        self.x2 = parameters[10]  # x coordinate of end point
+        self.y2 = parameters[11]  # y coordinate of end point
+        self.z2 = parameters[12]  # z coordinate of end point
 
     def __repr__(self):
         info = 'Conic Arc\nIGES Type 104\n'
@@ -278,7 +277,8 @@ class RationalBSplineCurve(Entity):
         # Control points
         self.control_points = []
         for i in range(9 + self.A + self.K, 9 + self.A + 4*self.K + 1, 3):
-            point = (parse_float(parameters[i]), parse_float(parameters[i+1]), parse_float(parameters[i+2]))
+            point = (parse_float(parameters[i]), parse_float(
+                parameters[i+1]), parse_float(parameters[i+2]))
             self.control_points.append(point)
 
         # Parameter values
@@ -300,9 +300,11 @@ class RationalBSplineCurve(Entity):
         s += str(self.T) + os.linesep
         s += str(self.W) + os.linesep
         s += str(self.control_points) + os.linesep
-        s += "Parameter: v(0) = {0}    v(1) = {1}".format(self.V0, self.V1) + os.linesep
+        s += "Parameter: v(0) = {0}    v(1) = {1}".format(self.V0,
+                                                          self.V1) + os.linesep
         if self.planar_curve:
-            s += "Unit normal: {0} {1} {2}".format(self.XNORM, self.YNORM, self.ZNORM)
+            s += "Unit normal: {0} {1} {2}".format(
+                self.XNORM, self.YNORM, self.ZNORM)
         return s
 
     def to_geomdl(self):
@@ -470,21 +472,27 @@ class RationalBSplineSurface(Entity):
         return self._v1
 
     def _add_parameters(self, input_parameters):
-        parameters = np.array([parse_float(param) for param in input_parameters], dtype=float)
+        parameters = np.array([parse_float(param)
+                              for param in input_parameters], dtype=float)
 
         self._k1 = int(parameters[1])  # Upper index of first sum
         self._k2 = int(parameters[2])  # Upper index of second sum
         self._m1 = int(parameters[3])  # Degree of first basis functions
         self._m2 = int(parameters[4])  # Degree of second basis functions
-        self._flag1 = bool(parameters[5])  # 0=closed in first direction, 1=not closed
-        self._flag2 = bool(parameters[6])  # 0=closed in second direction, 1=not closed
+        # 0=closed in first direction, 1=not closed
+        self._flag1 = bool(parameters[5])
+        # 0=closed in second direction, 1=not closed
+        self._flag2 = bool(parameters[6])
         self._flag3 = bool(parameters[7])  # 0=rational, 1=polynomial
-        self._flag4 = bool(parameters[8])  # 0=nonperiodic in first direction , 1=periodic
-        self._flag5 = bool(parameters[9])  # 0=nonperiodic in second direction , 1=periodic
+        # 0=nonperiodic in first direction , 1=periodic
+        self._flag4 = bool(parameters[8])
+        # 0=nonperiodic in second direction , 1=periodic
+        self._flag5 = bool(parameters[9])
 
         # load knot sequences
         self._knot1 = parameters[10:12 + self._k1 + self._m1]
-        self._knot2 = parameters[12 + self._k1 + self._m1: 14 + self._k2 + self._m1 + self._k1 + self._m2]
+        self._knot2 = parameters[12 + self._k1 + self._m1: 14 +
+                                 self._k2 + self._m1 + self._k1 + self._m2]
 
         # weights
         st = 14 + self._k2 + self._m1 + self._k1 + self._m2
@@ -492,7 +500,8 @@ class RationalBSplineSurface(Entity):
         self._weights = parameters[st:en]
 
         # control points
-        st = 14 + self._k2 + self._k1 + self._m1 + self._m2 + (1 + self._k2)*(1 + self._k1)
+        st = 14 + self._k2 + self._k1 + self._m1 + \
+            self._m2 + (1 + self._k2)*(1 + self._k1)
         en = st + 3*(1 + self._k2)*(1 + self._k1)
         self._cp = parameters[st:en].reshape(-1, 3)
 
@@ -543,22 +552,34 @@ class RationalBSplineSurface(Entity):
 
         info += '    Control Points: %d' % len(self._cp)
 
+        return info
+
     def to_geomdl(self):
         """Return a ``geommdl.BSpline.Surface``"""
-        surf = BSpline.Surface()
+        surf = NURBS.Surface()
 
         # Set degrees
         surf.degree_u = self._m2
         surf.degree_v = self._m1
 
         # set control points and knots
-        cp2d = self._cp.reshape(self._k2 + 1, self._k1 + 1, 3)
+        cpaux = self._weights.copy()
+        cpaux.shape = (len(cpaux), 1)
+
+        cpaux2 = self._cp.copy()
+        cont = 0
+        for w in self._weights:
+            cpaux2[cont,:] *= w
+            cont += 1
+
+        cpaux = np.concatenate([cpaux2, cpaux], axis=1)
+        cp2d = cpaux.reshape(self._k2 + 1, self._k1 + 1, 4)
         surf.ctrlpts2d = cp2d.tolist()
         surf.knotvector_u = self._knot2
         surf.knotvector_v = self._knot1
 
         # set weights
-        surf.weights = self._weights
+        #surf.weights = self._weights
         return surf
 
     def to_vtk(self, delta=0.025):
@@ -726,8 +747,10 @@ class Loop(Entity):
         c = 0
         for i in range(self.n_edges):
             edge = {'type': int(self.parameters[2 + c]),
-                    'e1': int(self.parameters[3 + c]),  # first vertex or edge list
-                    'index1': int(self.parameters[4 + c]),  # index of edge in e1
+                    # first vertex or edge list
+                    'e1': int(self.parameters[3 + c]),
+                    # index of edge in e1
+                    'index1': int(self.parameters[4 + c]),
                     'flag1': bool(self.parameters[5 + c]),  # orientation flag
                     'k1': int(self.parameters[6 + c])}  # n curves
             curves = []
@@ -742,7 +765,7 @@ class Loop(Entity):
 
     # @property
     # def edge_lists(self):
-    #     for 
+    #     for
 
     def curves(self):
         """list of curves"""
@@ -784,10 +807,12 @@ class EdgeList(Entity):
         self.edges = []
         for i in range(self.n_edges):
             edge = {'curve1': int(parameters[2 + 5*i]),  # first model space curve
-                    'svl': int(parameters[3 + 5*i]),  # vertex list for start vertex
+                    # vertex list for start vertex
+                    'svl': int(parameters[3 + 5*i]),
                     's': int(parameters[4 + 5*i]),  # start index
-                    'evl': int(parameters[5 + 5*i]), # vertex list for end vertex
-                    'e': int(parameters[6 + 5*i])} # index of end vertex in evl n
+                    # vertex list for end vertex
+                    'evl': int(parameters[5 + 5*i]),
+                    'e': int(parameters[6 + 5*i])}  # index of end vertex in evl n
             self.edges.append(edge)
 
     # @property

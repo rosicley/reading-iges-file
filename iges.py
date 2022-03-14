@@ -42,6 +42,7 @@ class Iges():
          <pyiges.geometry.Point at 0x7f7056069b10>,
          <pyiges.entity.Entity at 0x7f7056069910>]
         """
+        return self._entities
 
     def to_vtk(self, lines=True, bsplines=True,
                surfaces=True, points=True, delta=0.025, merge=True,
